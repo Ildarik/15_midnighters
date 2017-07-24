@@ -6,8 +6,9 @@ from pytz import timezone
 def load_attempts():
     pages = 10
     for page in range(1, pages + 1):
-        url = 'https://devman.org/api/challenges/solution_attempts/?page={}'
-        attempts = requests.get(url.format(page)).json()
+        url = 'https://devman.org/api/challenges/solution_attempts'
+        payload = {'page': page}
+        attempts = requests.get(url, params=payload).json()
         for attempt in attempts['records']:
             yield {
                 'username': attempt['username'],
@@ -27,7 +28,7 @@ def get_midnighters(attempt):
 if __name__ == '__main__':
     midnighters = []
     for attempt in load_attempts():
-        midnighters.append(get_midnighters(i))
+        midnighters.append(get_midnighters(attempt))
     print("Midnighters:")
     for username in set(midnighters):
         if username is not None:
