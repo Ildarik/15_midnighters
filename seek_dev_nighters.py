@@ -26,7 +26,7 @@ def get_midnighters(attempt):
 
 if __name__ == '__main__':
     midnighters = []
-    for i in load_attempts():
+    for attempt in load_attempts():
         midnighters.append(get_midnighters(i))
     print("Midnighters:")
     for username in set(midnighters):
