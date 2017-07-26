@@ -1,5 +1,5 @@
 import requests
-from datetime import datetime, time
+from datetime import datetime
 from pytz import timezone
 
 
@@ -17,7 +17,7 @@ def load_attempts():
             }
 
 
-def get_midnighters(attempt):
+def get_midnighter(attempt):
     if attempt['timestamp'] is not None:
         local_tz = timezone(attempt['timezone'])
         local_dt = datetime.fromtimestamp(attempt['timestamp'], tz=local_tz)
@@ -30,7 +30,7 @@ def get_midnighters(attempt):
 if __name__ == '__main__':
     midnighters = []
     for attempt in load_attempts():
-        midnighters.append(get_midnighters(attempt))
+        midnighters.append(get_midnighter(attempt))
     print("Midnighters:")
     for username in set(midnighters):
         if username is not None:
