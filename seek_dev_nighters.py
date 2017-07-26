@@ -4,11 +4,11 @@ from pytz import timezone
 
 
 def load_attempts():
-    pages = 10
-    for page in range(1, pages + 1):
-        url = 'https://devman.org/api/challenges/solution_attempts'
+    host = 'https://devman.org/api/challenges/solution_attempts'
+    number_of_pages = requests.get(host).json()['number_of_pages']
+    for page in range(1, number_of_pages + 1):
         payload = {'page': page}
-        attempts = requests.get(url, params=payload).json()
+        attempts = requests.get(host, params=payload).json()
         for attempt in attempts['records']:
             yield {
                 'username': attempt['username'],
