@@ -21,9 +21,8 @@ def get_midnighter(attempt):
     if attempt['timestamp'] is not None:
         local_tz = timezone(attempt['timezone'])
         local_dt = datetime.fromtimestamp(attempt['timestamp'], tz=local_tz)
-        midnight_start_hour = 00
         midnight_end_hour = 6
-        if midnight_start_hour <= local_dt.hour < midnight_end_hour:
+        if local_dt.hour < midnight_end_hour:
             return attempt['username']
 
 
