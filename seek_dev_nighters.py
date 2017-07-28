@@ -4,20 +4,21 @@ from pytz import timezone
 
 
 def load_attempts():
+    pages = 1
     host = 'https://devman.org/api/challenges/solution_attempts'
-    number_of_pages = requests.get(host).json()['number_of_pages']
-    for page in range(1, number_of_pages + 1):
-        payload = {'page': page}
-        attempts = requests.get(host, params=payload).json()
-        for attempt in attempts['records']:
+    page_content = requests.get(host, params={'page': pages})
+    while page_content.status_code == requests.codes.ok:
+        for attempt in page_content.json()['records']:
             yield {
                 'username': attempt['username'],
                 'timestamp': attempt['timestamp'],
                 'timezone': attempt['timezone'],
             }
+        pages += 1
+        page_content = requests.get(host, params={'page': pages})
 
 
-def get_midnighter(attempt):
+def get_midnighters(attempt):
     if attempt['timestamp'] is not None:
         local_tz = timezone(attempt['timezone'])
         local_dt = datetime.fromtimestamp(attempt['timestamp'], tz=local_tz)
@@ -29,7 +30,7 @@ def get_midnighter(attempt):
 if __name__ == '__main__':
     midnighters = []
     for attempt in load_attempts():
-        midnighters.append(get_midnighter(attempt))
+        midnighters.append(get_midnighters(attempt))
     print("Midnighters:")
     for username in set(midnighters):
         if username is not None:
